@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+
+    <title>Queues and Stacks</title>
+
+    <meta name="author" content="Timothy Batchelder">
+    <meta name="description" content="A visual display of how Stacks and Queues work.">
+
+    <link rel="stylesheet" href="css/main.css">
+  </head>
+
+  <body>
+    <!-- A basic Queue -->
+    <h1>Queue</h1>
+    <div class="grid-container">
+      <div class="grid-item">
+        Position in Queue:
+      </div>
+
+      <!-- Container for the visual counter display -->
+      <div id="qPosition" class="grid-item">
+        <span class="posCounter">0</span>
+      </div>
+
+      <!-- Container for the status of the Queue -->
+      <div class="grid-item">
+        <button id="setQ1Size" onclick="setQ1Size('Q')">Queue Size: 1</button>
+        <br />
+        <span id="isQ1Front">Front: NA</span>
+        <br />
+        <span id="isQ1Tail">Tail: NA</span>
+        <br />
+        <span id="isQ1Status">Status: Empty</span>
+      </div>
+
+      <div class="grid-item">Queue Contents:</div>
+
+      <!-- Container for the visual display -->
+      <div id="qVisual" class="grid-item">
+        <span id="q10" class="visuals">&#164;</span>
+      </div>
+
+      <!-- Container for the buttons to manipulate the Queue -->
+      <div>
+        <button id="enq" onclick="enq()">Enq</button>
+        <button id="deq">Deq</button>
+        <button id="front">Front</button>
+        <button id="tail">Tail</button>
+        <button id="clear">Clear</button>
+      </div>
+    </div>
+
+
+
+    <hr />
+
+    <h1>Stacks</h1>
+    <div>
+      <span id="s0">0</span>
+      <span id="s1">1</span>
+      <span id="s2">2</span>
+      <span id="s3">3</span>
+      <span id="s4">4</span>
+      <span id="s5">5</span>
+    </div>
+    <script src="js/main.js"></script>
+  </body>
+</html>

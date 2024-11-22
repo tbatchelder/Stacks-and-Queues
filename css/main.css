@@ -1,0 +1,45 @@
+/* Basic reset */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+* {
+  margin: 0;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: 160px auto 160px;
+  grid-template-rows: auto auto;
+}
+.grid-item {
+  font-size: 16px;
+
+  padding: 15px;
+
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid black;
+}
+
+.posCounter {
+  margin: 5px;
+  padding: 0.5em;
+
+  border: 1px solid black;
+}
+
+.visuals {
+  margin: 5px;
+  padding: 0.5em;
+  
+  border: 1px solid black;
+}
+
+.qFront {
+  background-color: lightblue;
+}
+
+.qTail {
+  background-color: red;
+}
