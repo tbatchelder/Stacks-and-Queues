@@ -1,48 +1,23 @@
-function main() {
-    const q = new Queue();
-    console.log(q);
-    console.log("Is empty?", q.isEmpty());
-    // for (let i = 1; i <= 6; i++) {
-    //     q.enq(i);
-    // }
-    blinker(store.q0, "qFront", store.q1, "qTail");
-    console.log("hi");
-    // console.log("Front:   ", q.front());
-    // console.log("Deq:     ", q.deq());
-    // q.print();
-    // console.log("Is empty?", q.isEmpty());
-}
-
-store = {};
-store.qSize = 0;
-store.qSizeButton = document.getElementById("setSize");
-store.q0 = document.getElementById("q0");
-
-function delay(milliseconds){
-    return new Promise(resolve => {
-        setTimeout(resolve, milliseconds);
-    });
-}
-
-async function blinker(headBlinkee, headCell, tailBlinkee, tailCell) {
-  for (i = 0; i < 7; i++) {
-    headBlinkee.classList.toggle(headCell);
-    tailBlinkee.classList.toggle(tailCell);
-    await delay(200);
-  }
-}
-
-function enq() {
-  
-}
+// Create an object to store all of the needed information so we only have to access it once.
+store = [];
+store[0] = {};
+store[0].size = 1;
+store[0].front = 0;
+store[0].tail = 0;
+store[0].sizeButton = document.getElementById("setQ1Size");
+store[0].frontButton = document.getElementById("isQ1Front");
+store[0].tailButton = document.getElementById("isQ1Tail");
+store[0].status = document.getElementById("isQ1Status");
+store[0].q1_0 = document.getElementById("q1_0");
+store[0].contents = [];
 
 // Increment the size of the Queue or Stack
 function setSize(area) {
   switch(area) {
-    case "Q": 
-      store.qSize += 1;
-      store.qSizeButton.innerHTML = "Queue Size: " + (store.qSize + 1);
-      addElement(store.qSize, "qp", "QPosition", "q", "qBox");
+    case "Q1": 
+      store[0].size += 1;
+      store[0].sizeButton.innerHTML = "Size: " + (store[0].size);
+      addElement(store[0].size - 1, "posCounter", "qPosition", "visuals", "qVisual", "q1_" + (store[0].size - 1));
       break;
     default:
       break;
@@ -50,42 +25,106 @@ function setSize(area) {
 }
 
 // Create a new element
-function addElement (aCount, aClass, aID, a2Class, a2ID) {
+function addElement (theCount, posClass, posParentID, visClass, visParentID, visNewID) {
   // Create the new element for the position display
   let newPositionElement = document.createElement("span");
   // Set the text for it
-  newPositionElement.textContent = aCount;
+  newPositionElement.textContent = theCount;
   // Add the class to the element
-  newPositionElement.classList.add(aClass);
-  // Set the id of the element
-  newPositionElement.id = "q" + aCount;
+  newPositionElement.classList.add(posClass);
   // Get the parent element where you want to add the new element
-  let parentElement = document.getElementById(aID);
+  let parentElement = document.getElementById(posParentID);
   // Append the new element to the parent
   parentElement.appendChild(newPositionElement); 
   
-  if (store.qSize % 9 == 0) {
+  // Keep the line to only 10 items wide so it doesn't go on forever
+  if (theCount % 9 == 0) {
     let breaker = document.createElement("br");
     parentElement.appendChild(breaker);
   }
   
-  let newElement1 = document.createElement("span");
-  newElement1.textContent = String.fromCharCode(164);; 
-  // Add the class to the element
-  newElement1.classList.add(a2Class);
-  // Get the parent element where you want to add the new element
-  let parentElement1 = document.getElementById(a2ID); 
-  // Append the new element to the parent
-  parentElement1.appendChild(newElement1);
+  // Now add the visual part of the Stack/Queue in the same manner
+  let newVisualElement = document.createElement("span");
+  newVisualElement.textContent = String.fromCharCode(164);
+  newVisualElement.classList.add(visClass);
+  // Add the id to the new element
+  newVisualElement.setAttribute("id", visNewID);
+  let parentVisualElement = document.getElementById(visParentID); 
+  parentVisualElement.appendChild(newVisualElement);
   
-  if (store.qSize % 9 == 0) {
+  // Keep the line to only 10 items wide so it doesn't go on forever
+  if (theCount % 9 == 0) {
     let breaker = document.createElement("br");
-    parentElement1.appendChild(breaker);
+    parentVisualElement.appendChild(breaker);
   }
   
-  const thisKey = "q" + aCount;
-  store[thisKey] = document.getElementById("q" + aCount);
+  // Add the new element to the store
+  store[0][visNewID] = document.getElementById(visNewID);
 };
+
+// Enqueue a value into the Queue Q1
+function enqQ1() {
+  // Check to see if the queue is full
+  // if ((store[0].size - 1) == store[0].contents.length) {
+  //   store[0].status.textContent = "Status: Queue is full.  Expand the Queue.";
+  // }
+
+  // Add the first item to the queue
+  if (store[0].contents.length == 0) {
+    store[0].front = 0;
+    store[0].tail = 0;
+    store[0].contents.push(store[0].tail);
+    store[0].status.textContent = "Status: Added item to queue.";
+  } else {
+    // Here, we need to start checking the size and fullness of the queue
+    if ((store[0].tail + 1) <= (store[0].size - 1)) {
+      // If the enq is smaller than the store, check that the head isn't in the way
+      if ((store[0].tail + 1) != store[0].front) {
+        // If the next open cell isn't the head, go ahead and add it
+        store[0].tail += 1;
+        store[0].contents.push(store[0].tail);
+        store[0].status.textContent = "Status: Added item to queue.";
+      }
+    }
+  }
+  store[0].frontButton.textContent = "Front: " + store[0].front;
+  store[0].tailButton.textContent = "Tail: " + store[0].tail;
+  store[0]["q1_" + store[0].tail].textContent = store[0].contents[store[0].tail];
+};
+
+// Dequeue a value from the Queue Q1
+function deqQ1() {
+  // Remove the first item in the queue
+  store[0]["q1_" + store[0].front].textContent = String.fromCharCode(164);
+  store[0].contents[store[0].front] = '';
+  store[0].front += 1;
+  store[0].status.textContent = "Status: Removed item from queue.";
+  store[0].frontButton.textContent = "Front: " + store[0].front;
+};
+
+function delay(milliseconds){
+    return new Promise(resolve => {
+        setTimeout(resolve, milliseconds);
+    });
+}
+
+async function blinker(blinkee) {
+  switch (blinkee) {
+    case 'front':
+      blinkme = store[0]["q1_" + store[0].front];
+      theClass = "qFront";
+      break;
+    case 'tail':
+      blinkme = store[0]["q1_" + store[0].tail];
+      theClass = "qTail";
+      break;
+  }
+  for (i = 0; i < 6; i++) {
+    blinkme.classList.toggle(theClass);
+    await delay(200);
+  }
+}
+
 
 
 
@@ -284,4 +323,19 @@ function addElement (aCount, aClass, aID, a2Class, a2ID) {
 //     }
 //     return false;
 //   }
+// }
+
+// function main() {
+//     const q = new Queue();
+//     console.log(q);
+//     console.log("Is empty?", q.isEmpty());
+//     // for (let i = 1; i <= 6; i++) {
+//     //     q.enq(i);
+//     // }
+//     blinker(store.q0, "qFront", store.q1, "qTail");
+//     console.log("hi");
+//     // console.log("Front:   ", q.front());
+//     // console.log("Deq:     ", q.deq());
+//     // q.print();
+//     // console.log("Is empty?", q.isEmpty());
 // }

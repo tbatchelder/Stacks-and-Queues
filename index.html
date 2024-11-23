@@ -16,6 +16,14 @@
     <!-- A basic Queue -->
     <h1>Queue</h1>
     <div class="grid-container">
+      <!-- Container for the status of the Queue -->
+      <div class="grid-item-status">
+        <button id="setQ1Size" class="status-buttons" onclick="setSize('Q1')">Size: 1</button>
+        <button id="isQ1Front" class="front status-buttons" onclick="blinker('front')">Front: 0</button>
+        <button id="isQ1Tail" class="tail status-buttons" onclick="blinker('tail')">Tail: 0</button>
+        <span id="isQ1Status" class="status-buttons">Status: Empty</span>
+      </div>
+
       <div class="grid-item">
         Position in Queue:
       </div>
@@ -25,31 +33,18 @@
         <span class="posCounter">0</span>
       </div>
 
-      <!-- Container for the status of the Queue -->
-      <div class="grid-item">
-        <button id="setQ1Size" onclick="setQ1Size('Q')">Queue Size: 1</button>
-        <br />
-        <span id="isQ1Front">Front: NA</span>
-        <br />
-        <span id="isQ1Tail">Tail: NA</span>
-        <br />
-        <span id="isQ1Status">Status: Empty</span>
-      </div>
-
       <div class="grid-item">Queue Contents:</div>
 
       <!-- Container for the visual display -->
       <div id="qVisual" class="grid-item">
-        <span id="q10" class="visuals">&#164;</span>
+        <span id="q1_0" class="visuals">&#164;</span>
       </div>
 
       <!-- Container for the buttons to manipulate the Queue -->
-      <div>
-        <button id="enq" onclick="enq()">Enq</button>
-        <button id="deq">Deq</button>
-        <button id="front">Front</button>
-        <button id="tail">Tail</button>
-        <button id="clear">Clear</button>
+      <div class="grid-item-status">
+        <button id="enq" class="status-buttons" onclick="enqQ1()">Enq</button>
+        <button id="deq" class="status-buttons" onclick="deqQ1()">Deq</button>
+        <button id="clear" class="status-buttons">Clear</button>
       </div>
     </div>
 
