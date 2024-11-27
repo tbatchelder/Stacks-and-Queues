@@ -95,18 +95,58 @@ function enqQ1() {
 // Dequeue a value from the Queue Q1
 function deqQ1() {
   // Remove the first item in the queue
+  // Since we know where the front is, we can set the cell and contents right away
   store[0]["q1_" + store[0].front].textContent = String.fromCharCode(164);
   store[0].contents[store[0].front] = '';
-  store[0].front += 1;
-  store[0].status.textContent = "Status: Removed item from queue.";
+  
+  // In order to figure out where the new front is, we need to check against where the tail is
+  // If the new front is less than the tail, we haven't wrapped around yet so we are good with moving the front up one space
+  if ((store[0].front + 1) < store[0].tail) {
+    store[0].front += 1;
+  // Same thing with the new front and the tail being the same value - it just means there is only 1 value left in the queue
+  } else if ((store[0].front + 1) == store[0].tail) {
+    store[0].front = store[0].tail;
+  // This is where it gets tricky now
+  // If the tail moved in front of the front, we have to find where it went
+  } else if ((store[0].front + 1) > store[0].tail) {
+    // There are multiple options here
+    // First, let's find out if there are any more values in the queue
+    let checker = -1;
+    for (let i = 0; i < store[0].contents.length; i++) {
+      if (store[0].contents[i] != '') {
+        checker = i;
+        break;
+      }
+    }
+    // Once we've determined if there is a value or not, let's check that there are no values first.
+    if (checker == -1) {
+      store[0].status.textContent = "Status: All items removed from Queue.  Cannot remove more.";
+      // send it to the Clear function
+      whiteout();
+    }
+    // Now, let's find out if the front is at the end of the queue which means looping back on itself, if there is room
+    if (checker = store[0].contents.length) {
+      
+    }
+  }
+  
+  // store[0].status.textContent = "Status: Removed item from queue.";
   store[0].frontButton.textContent = "Front: " + store[0].front;
+};
+
+function whiteout() {
+  store[0].contents = [];
+  store[0].frontButton.textContent = "Front: 0";
+  store[0].tailButton.textContent = "Tail: 0";
+  store[0].front = 0;
+  store[0].tail = 0;
 };
 
 function delay(milliseconds){
     return new Promise(resolve => {
         setTimeout(resolve, milliseconds);
     });
-}
+};
 
 async function blinker(blinkee) {
   switch (blinkee) {
@@ -123,7 +163,7 @@ async function blinker(blinkee) {
     blinkme.classList.toggle(theClass);
     await delay(200);
   }
-}
+};
 
 
 
