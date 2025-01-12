@@ -38,14 +38,24 @@
   margin: 0px 40px 0px;
 }
 .posCounter {
+  display: inline-block;
+
   margin: 9px;
   padding: 0.5em;
+  text-align: center;
+
+  width: 40px;
   
   border: 1px solid black;
 }
 .visuals {
+  display: inline-block;
+
   margin: 9px;
   padding: 0.5em;
+  text-align: center;
+
+  width: 40px;
   
   border: 1px solid black;
 }
