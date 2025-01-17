@@ -18,9 +18,9 @@
     <div class="grid-container">
       <!-- Container for the status of the Queue -->
       <div class="grid-item-status">
-        <button id="setQ1Size" class="status-buttons" onclick="setSize('Q1')">Size: 1</button>
-        <button id="isQ1Front" class="front status-buttons" onclick="blinker('front')">Front: 0</button>
-        <button id="isQ1Tail" class="tail status-buttons" onclick="blinker('tail')">Tail: 0</button>
+        <button id="setQ1Size" class="status-buttons" onclick="setQueueSize('Q1')">Size: 1</button>
+        <button id="isQ1Front" class="front status-buttons" onclick="blinker('frontQ')">Front: 0</button>
+        <button id="isQ1Tail" class="tail status-buttons" onclick="blinker('tailQ')">Tail: 0</button>
         <span id="isQ1Status" class="status-buttons">Status: Empty</span>
       </div>
 
@@ -42,25 +42,47 @@
 
       <!-- Container for the buttons to manipulate the Queue -->
       <div class="grid-item-status">
-        <button id="enq" class="status-buttons" onclick="enqQ1()">Enq</button>
-        <button id="deq" class="status-buttons" onclick="deqQ1()">Deq</button>
-        <button id="clear" class="status-buttons" onclick="whiteout()">Clear</button>
+        <button id="enqQ" class="status-buttons" onclick="enqQ1()">Enq</button>
+        <button id="deqQ" class="status-buttons" onclick="deqQ1()">Deq</button>
+        <button id="clearQ" class="status-buttons" onclick="whiteoutQ()">Clear</button>
       </div>
     </div>
-
-
 
     <hr />
 
     <h1>Stacks</h1>
-    <div>
-      <span id="s0">0</span>
-      <span id="s1">1</span>
-      <span id="s2">2</span>
-      <span id="s3">3</span>
-      <span id="s4">4</span>
-      <span id="s5">5</span>
+    <div class="grid-container">
+      <!-- Container for the status of the Stack -->
+      <div class="grid-item-status">
+        <button id="isS1Bottom" class="front status-buttons" onclick="blinker('bottom')">Bottom: 0</button>
+        <button id="isS1Top" class="tail status-buttons" onclick="blinker('top')">Top (Peek): 0</button>
+        <span id="isS1Status" class="status-buttons">Status: Empty</span>
+      </div>
+    
+      <div class="grid-item">
+        Position in Stack:
+      </div>
+    
+      <!-- Container for the visual Stack counter display -->
+      <div id="sPosition" class="grid-item">
+        <span class="posCounter">0</span>
+      </div>
+    
+      <div class="grid-item">Stack Contents:</div>
+    
+      <!-- Container for the visual Stack display -->
+      <div id="sVisual" class="grid-item">
+        <span id="s1_0" class="visuals">&#164;</span>
+      </div>
+    
+      <!-- Container for the buttons to manipulate the Stack -->
+      <div class="grid-item-status">
+        <button id="enqS" class="status-buttons" onclick="enqS1()">Push</button>
+        <button id="deqS" class="status-buttons" onclick="deqS1()">Pop</button>
+        <button id="clearS" class="status-buttons" onclick="whiteoutS()">Clear</button>
+      </div>
     </div>
+
     <script src="js/main.js"></script>
   </body>
 </html>

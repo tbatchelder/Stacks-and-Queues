@@ -12,26 +12,27 @@ store[0].status = document.getElementById("isQ1Status");
 store[0].q1_0 = document.getElementById("q1_0");
 store[0].contents = [];
 
+store[1] = {};
+store[1].top = 0;
+store[1].bottomButton = document.getElementById("isS1Bottom");
+store[1].topButton = document.getElementById("isS1Top");
+store[1].status = document.getElementById("isS1Status");
+store[1].s1_0 = document.getElementById("s1_0");
+store[1].count = 0;
+
 // store[0].contents is the critical pin that controls Enq and Deq since it holds all values in order.
 // store[0].loop allows the counter to count properly as the Queue loops around multiple times.
 // The first value is always the front.
 // The last value is always the tail.
 
 // Increment the size of the Queue or Stack
-function setSize(area) {
-  switch(area) {
-    case "Q1": 
-      // Increment the size value
-      store[0].size += 1;
-      // Update the size display
-      store[0].sizeButton.innerHTML = "Size: " + (store[0].size);
-      // Create the new DOM element
-      addElement(store[0].size - 1, "posCounter", "qPosition", "visuals", "qVisual", "q1_" + (store[0].size - 1));
-      break;
-    
-    default:
-      break;
-  }
+function setQueueSize(area) { 
+  // Increment the size value
+  store[0].size += 1;
+  // Update the size display
+  store[0].sizeButton.innerHTML = "Size: " + (store[0].size);
+  // Create the new DOM element
+  addElement("Q", store[0].size - 1, "posCounter", "qPosition", "qP1_" + (store[0].size - 1), "visuals", "qVisual", "q1_" + (store[0].size - 1));
 }
 
 // Create a new element
@@ -39,16 +40,19 @@ function setSize(area) {
 //   position counter value
 //   CSS class of new element for the position
 //   ID of the div to place the new element into for the position counter
+//   ID of the position counter
 //   CSS class of the new Queue element
 //   ID of the div to place the new element into for the Queue display
 //   ID of the new Queue element so it can be interacted with later on
-function addElement (theCount, posClass, posParentID, visClass, visParentID, visNewID) {
+function addElement (theType, theCount, posClass, posParentID, posNewID, visClass, visParentID, visNewID) {
   // Create the new element for the position display
   let newPositionElement = document.createElement("span");
   // Set the text for it
   newPositionElement.textContent = theCount;
   // Add the class to the element
   newPositionElement.classList.add(posClass);
+  // Add the id to the element
+  newPositionElement.setAttribute("id", posNewID);
   // Get the parent element where you want to add the new element
   let parentElement = document.getElementById(posParentID);
   // Append the new element to the parent
@@ -62,6 +66,11 @@ function addElement (theCount, posClass, posParentID, visClass, visParentID, vis
   
   // Now add the visual part of the Stack/Queue in the same manner
   let newVisualElement = document.createElement("span");
+  if (theType == "Q") {
+    newVisualElement.textContent = String.fromCharCode(164);
+  } else {
+    newVisualElement.textContent = theCount;
+  }
   newVisualElement.textContent = String.fromCharCode(164);
   newVisualElement.classList.add(visClass);
 
@@ -80,8 +89,13 @@ function addElement (theCount, posClass, posParentID, visClass, visParentID, vis
   store[0][visNewID] = document.getElementById(visNewID);
 
   // Update the status
-  store[0].status.textContent = "Status: Added element to Queue.";
-  statusRestore();
+  if (theType = "Q") {
+    store[0].status.textContent = "Status: Added element to Queue.";
+  } else {
+    store[1].status.textContent = "Status: Added element to Stack.";
+  }
+  
+  statusQRestore();
 };
 
 // Enqueue a value into the Queue Q1
@@ -89,7 +103,7 @@ function enqQ1() {
   // Check to see if the queue is full
   if (store[0].contents.length == store[0].size) {
     store[0].status.textContent = "Status: Queue is full.  Expand the Queue or Dequeue an item.";
-    statusRestore();
+    statusQRestore();
     return;
   }
 
@@ -100,13 +114,13 @@ function enqQ1() {
       store[0].tail = 0;
       store[0].contents.push(0);
       store[0].status.textContent = "Status: Added item to queue.";
-      statusRestore();
+      statusQRestore();
       break;
     
     // Check to see if the new tail will overwrite the current head
     case (store[0].tail + 1) == store[0].front:
       store[0].status.textContent = "Status: New Tail cannot overwrite Front. Queue is full. Dequeue an item.";
-      statusRestore();
+      statusQRestore();
       break;
     
     // Check to see if the Queue has space open from the current tail to the end of the Queue size
@@ -119,7 +133,7 @@ function enqQ1() {
         store[0].contents.push(store[0].tail + store[0].size * store[0].loop);
       }
       store[0].status.textContent = "Status: Added item to queue.";
-      statusRestore();
+      statusQRestore();
       break;
     
     // Check to see if the new tail exceeds the Queue size
@@ -133,7 +147,7 @@ function enqQ1() {
         store[0].contents.push(store[0].tail + store[0].size * store[0].loop);
         store[0].status.textContent = "Status: Added item to queue.";
       }
-      statusRestore();
+      statusQRestore();
       break;
   }
  
@@ -161,7 +175,7 @@ function deqQ1() {
       store[0].front = 0;
       store[0].tail = 0;
       store[0].status.textContent = "Status: All items removed from Queue.";
-      statusRestore();
+      statusQRestore();
       break;
     
     case checkSpace > 0:
@@ -169,11 +183,11 @@ function deqQ1() {
       if (store[0].front + 1 < store[0].size) {
         store[0].front += 1;
         store[0].status.textContent = "Status: One item removed from Queue. Front updated.";
-        statusRestore();
+        statusQRestore();
       } else if (store[0].front + 1 == store[0].size) {
         store[0].front = 0;
         store[0].status.textContent = "Status: One item removed from Queue. Front updated.";
-        statusRestore();
+        statusQRestore();
       };
       break;
     
@@ -192,13 +206,31 @@ function deqQ1() {
 };
 
 // Reset the system back to the default
-function whiteout() {
-  store[0].contents = [];
+function whiteoutQ() {
+  store[0].sizeButton.textContent = "Size: 1";
   store[0].frontButton.textContent = "Front: 0";
   store[0].tailButton.textContent = "Tail: 0";
+  store[0].q1_0.textContent = String.fromCharCode(164);
   store[0].front = 0;
   store[0].tail = 0;
   store[0].loop = 0;
+  // We also need to remove the HTML elements added ... forgot about that :)
+  for (i = 1; i < store[0].size; i++) {
+    // Remove the position counter
+    tempID = "qP1_" + i;
+    tempElement = document.getElementById(tempID);
+    tempElement.remove();
+    // Remove the visual 
+    tempID = "q1_" + i;
+    tempElement = document.getElementById(tempID);
+    tempElement.remove();
+    // Remove the dictionary element
+    delete store[0][tempID];
+  }
+  store[0].size = 1;
+  store[0].contents = [];
+  store[0].status.textContent = "Status: Cleared Queue.";
+  statusQRestore();
 };
 
 // A delay function to force a pause in state changes
@@ -208,20 +240,30 @@ function delay(milliseconds){
     });
 };
 
-// Used to "blink" the appropirate Queue Contents field so the user can see which one it is referring too
+// Used to "blink" the appropirate Contents field so the user can see which one it is referring too
 async function blinker(blinkee) {
   let blinkme = "";
   let theClass = "";
 
   switch (blinkee) {
-    case 'front':
+    case 'frontQ':
       blinkme = store[0]["q1_" + store[0].front];
       theClass = "qFront";
       break;
     
-    case 'tail':
+    case 'tailQ':
       blinkme = store[0]["q1_" + store[0].tail];
       theClass = "qTail";
+      break;
+    
+    case 'bottom':
+      blinkme = store[1]["s1_0"];
+      theClass = "sBottom";
+      break;
+    
+    case 'top':
+      blinkme = store[1]["s1_" + store[1].top];
+      theClass = "sTop";
       break;
   }
 
@@ -232,7 +274,24 @@ async function blinker(blinkee) {
 };
 
 // Used to return the status line to a default value after each change
-async function statusRestore() {
+async function statusQRestore() {
   await delay(800);
   store[0].status.textContent = "Status: Awaiting command.";
+}
+
+//////////////////////////////////////////////////////////////
+
+// Add a new item to the Stack
+function enqS1() {
+  // Check if there are no values in the Stack
+  if (store[1].count == 0) {
+    // If there is nothing, all we need to do is add the markers for it
+    store[1].count += 1;
+    store[1].top += 1;
+    store[1]["s1_0"].textContent = "0";
+  } else {
+    addElement("S", store[1].count, "posCounter", "sPosition", "sP1_" + store[1].count, "visuals", "sVisual", "s1_" + store[1].count);
+    store[1].count += 1;
+    store[1].top += 1;
+  }
 }
