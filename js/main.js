@@ -27,12 +27,18 @@ store[1].count = 0;
 
 // Increment the size of the Queue or Stack
 function setQueueSize(area) { 
-  // Increment the size value
-  store[0].size += 1;
-  // Update the size display
-  store[0].sizeButton.innerHTML = "Size: " + (store[0].size);
-  // Create the new DOM element
-  addElement("Q", store[0].size - 1, "posCounter", "qPosition", "qP1_" + (store[0].size - 1), "visuals", "qVisual", "q1_" + (store[0].size - 1));
+  // Let's make sure they can't increase the size if there are Queue items already
+  if (store[0].contents == []) {
+    // Increment the size value
+    store[0].size += 1;
+    // Update the size display
+    store[0].sizeButton.innerHTML = "Size: " + (store[0].size);
+    // Create the new DOM element
+    addElement("Q", store[0].size - 1, "posCounter", "qPosition", "qP1_" + (store[0].size - 1), "visuals", "qVisual", "q1_" + (store[0].size - 1));
+  } else {
+    store[0].status.textContent = "Status: Please clear the Queue before increasing the size.";
+    statusRestore("Q");
+  }
 }
 
 // Create a new element
@@ -86,16 +92,20 @@ function addElement (theType, theCount, posClass, posParentID, posNewID, visClas
   }
   
   // Add the new element to the store
-  store[0][visNewID] = document.getElementById(visNewID);
+  if (theType == "Q") {
+    store[0][visNewID] = document.getElementById(visNewID);
+  } else {
+    store[1][visNewID] = document.getElementById(visNewID);
+  }
 
   // Update the status
-  if (theType = "Q") {
+  if (theType == "Q") {
     store[0].status.textContent = "Status: Added element to Queue.";
+    statusRestore("Q");
   } else {
     store[1].status.textContent = "Status: Added element to Stack.";
+    statusRestore("S");
   }
-  
-  statusQRestore();
 };
 
 // Enqueue a value into the Queue Q1
@@ -103,7 +113,7 @@ function enqQ1() {
   // Check to see if the queue is full
   if (store[0].contents.length == store[0].size) {
     store[0].status.textContent = "Status: Queue is full.  Expand the Queue or Dequeue an item.";
-    statusQRestore();
+    statusRestore("Q");
     return;
   }
 
@@ -114,13 +124,13 @@ function enqQ1() {
       store[0].tail = 0;
       store[0].contents.push(0);
       store[0].status.textContent = "Status: Added item to queue.";
-      statusQRestore();
+      statusRestore("Q");
       break;
     
     // Check to see if the new tail will overwrite the current head
     case (store[0].tail + 1) == store[0].front:
       store[0].status.textContent = "Status: New Tail cannot overwrite Front. Queue is full. Dequeue an item.";
-      statusQRestore();
+      statusRestore("Q");
       break;
     
     // Check to see if the Queue has space open from the current tail to the end of the Queue size
@@ -133,7 +143,7 @@ function enqQ1() {
         store[0].contents.push(store[0].tail + store[0].size * store[0].loop);
       }
       store[0].status.textContent = "Status: Added item to queue.";
-      statusQRestore();
+      statusRestore("Q");
       break;
     
     // Check to see if the new tail exceeds the Queue size
@@ -147,7 +157,7 @@ function enqQ1() {
         store[0].contents.push(store[0].tail + store[0].size * store[0].loop);
         store[0].status.textContent = "Status: Added item to queue.";
       }
-      statusQRestore();
+      statusRestore("Q");
       break;
   }
  
@@ -175,7 +185,7 @@ function deqQ1() {
       store[0].front = 0;
       store[0].tail = 0;
       store[0].status.textContent = "Status: All items removed from Queue.";
-      statusQRestore();
+      statusRestore("Q");
       break;
     
     case checkSpace > 0:
@@ -183,11 +193,11 @@ function deqQ1() {
       if (store[0].front + 1 < store[0].size) {
         store[0].front += 1;
         store[0].status.textContent = "Status: One item removed from Queue. Front updated.";
-        statusQRestore();
+        statusRestore("Q");
       } else if (store[0].front + 1 == store[0].size) {
         store[0].front = 0;
         store[0].status.textContent = "Status: One item removed from Queue. Front updated.";
-        statusQRestore();
+        statusRestore("Q");
       };
       break;
     
@@ -230,7 +240,7 @@ function whiteoutQ() {
   store[0].size = 1;
   store[0].contents = [];
   store[0].status.textContent = "Status: Cleared Queue.";
-  statusQRestore();
+  statusRestore("Q");
 };
 
 // A delay function to force a pause in state changes
@@ -274,24 +284,66 @@ async function blinker(blinkee) {
 };
 
 // Used to return the status line to a default value after each change
-async function statusQRestore() {
+async function statusRestore(theType) {
   await delay(800);
-  store[0].status.textContent = "Status: Awaiting command.";
+  if (theType == "Q") {
+    store[0].status.textContent = "Status: Awaiting command.";
+  } else {
+    store[1].status.textContent = "Status: Awaiting command.";
+  }
 }
 
 //////////////////////////////////////////////////////////////
 
 // Add a new item to the Stack
-function enqS1() {
+function push1() {
   // Check if there are no values in the Stack
   if (store[1].count == 0) {
     // If there is nothing, all we need to do is add the markers for it
     store[1].count += 1;
-    store[1].top += 1;
+
     store[1]["s1_0"].textContent = "0";
+    store[1].status.textContent = "Status: Added element to Stack.";
+    statusRestore("S");
   } else {
     addElement("S", store[1].count, "posCounter", "sPosition", "sP1_" + store[1].count, "visuals", "sVisual", "s1_" + store[1].count);
+    store[1]["s1_" + store[1].count].textContent = store[1].count;
     store[1].count += 1;
     store[1].top += 1;
+    store[1].topButton.textContent = "Top (Peek): " + store[1].top;
+    statusRestore("S");
   }
 }
+
+// Remove an item from the stack
+// We don't need to "hide" anything since the pop removes it ... so we just need to remove the item
+function pop1() {
+  if (store[1].top - 1 < 0) {
+    store[1].top = 0;
+    store[1].count = 0;
+    store[1].topButton.textContent = "Top (Peak): " + store[1].top;
+    store[1].s1_0.textContent = String.fromCharCode(164);
+    store[1].status.textContent = "Status: All items removed; cannot remove more.";
+    statusRestore("S");
+    
+  } else {
+    store[1].top -= 1;
+    store[1].count -= 1;
+    store[1].topButton.textContent = "Top (Peak): " + store[1].top;
+
+    tempID = "sP1_" + store[1].count;
+    tempElement = document.getElementById(tempID);
+    tempElement.remove();
+
+    tempID = "s1_" + store[1].count;
+    tempElement = document.getElementById(tempID);
+    tempElement.remove();
+
+    // Remove the dictionary element
+    delete store[1][tempID];
+
+    store[0].status.textContent = "Status: Popped Stack element.";
+    statusRestore("Q");
+  }
+}
+
