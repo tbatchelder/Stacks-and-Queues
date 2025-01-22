@@ -343,7 +343,7 @@ function pop1() {
     delete store[1][tempID];
 
     store[0].status.textContent = "Status: Popped Stack element.";
-    statusRestore("Q");
+    statusRestore("S");
   }
 }
 
