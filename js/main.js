@@ -347,3 +347,26 @@ function pop1() {
   }
 }
 
+// Reset the system back to the default
+function whiteoutS() {
+  store[1].topButton.textContent = "Top (Peek): 0";
+  store[1].s1_0.textContent = String.fromCharCode(164);
+  store[1].top = 0;
+  // We also need to remove the HTML elements added ... forgot about that :)
+  for (i = 1; i < store[1].count; i++) {
+    // Remove the position counter
+    tempID = "sP1_" + i;
+    tempElement = document.getElementById(tempID);
+    tempElement.remove();
+    // Remove the visual 
+    tempID = "s1_" + i;
+    tempElement = document.getElementById(tempID);
+    tempElement.remove();
+    // Remove the dictionary element
+    delete store[1][tempID];
+  }
+  store[1].count = 0;
+  store[1].contents = [];
+  store[1].status.textContent = "Status: Cleared Queue.";
+  statusRestore("S");
+};
